@@ -1,0 +1,38 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: book-review-pipeline
+spec:
+  workspaces:
+    - name: shared-workspace
+  tasks:
+    - name: npm-install
+      taskRef:
+        name: npm
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+      params:
+        - name: ARGS
+          value: ["install"]
+
+    - name: run-tests
+      taskRef:
+        name: jasmine
+      runAfter:
+        - npm-install
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+
+    - name: build-app
+      taskRef:
+        name: npm
+      runAfter:
+        - run-tests
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+      params:
+        - name: ARGS
+          value: ["run", "build"]
