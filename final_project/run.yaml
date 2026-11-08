@@ -5,6 +5,11 @@ metadata:
 spec:
   pipelineRef:
     name: book-review-pipeline
+  params:
+    - name: repo-url
+      value: "https://github.com/Allin152/expressBookReviews"
+    - name: branch
+      value: "main"
   workspaces:
     - name: shared-workspace
       volumeClaimTemplate:
